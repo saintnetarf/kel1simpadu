@@ -1,0 +1,649 @@
+{
+  "info": {
+    "name": "Auth Center API",
+    "_postman_id": "b4d4b3b6-7f52-4dc4-8d3a-0b8c90d64f4a",
+    "description": "Collection for Laravel 13 Auth Center microservice.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:8000"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "userId",
+      "value": "1"
+    },
+    {
+      "key": "serviceClientId",
+      "value": "1"
+    },
+    {
+      "key": "apiClientId",
+      "value": "1"
+    },
+    {
+      "key": "adminAkademikToken",
+      "value": ""
+    },
+    {
+      "key": "menuAccessId",
+      "value": "1"
+    },
+    {
+      "key": "serviceRegistryId",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@poliban.ac.id\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "login"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "if (body?.data?.token) {",
+                  "  pm.environment.set('token', body.data.token);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/refresh-token",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "refresh-token"]
+            }
+          }
+        },
+        {
+          "name": "Me",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "me"]
+            }
+          }
+        },
+        {
+          "name": "Validate Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"{{token}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/validate-token",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "validate-token"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "List Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/users", "host": ["{{baseUrl}}"], "path": ["api", "users"] }
+          }
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"User Baru\",\n  \"email\": \"userbaru@poliban.ac.id\",\n  \"password\": \"password123\",\n  \"roles\": [1]\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/users", "host": ["{{baseUrl}}"], "path": ["api", "users"] }
+          }
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"User Update\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/users/{{userId}}", "host": ["{{baseUrl}}"], "path": ["api", "users", "{{userId}}"] }
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/users/{{userId}}", "host": ["{{baseUrl}}"], "path": ["api", "users", "{{userId}}"] }
+          }
+        },
+        {
+          "name": "Scenario - admin_akademik can list users",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{adminAkademikToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/users", "host": ["{{baseUrl}}"], "path": ["api", "users"] }
+          }
+        },
+        {
+          "name": "Scenario - admin_akademik cannot create users",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{adminAkademikToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Forbidden User\",\n  \"email\": \"forbidden@poliban.ac.id\",\n  \"password\": \"password123\",\n  \"roles\": [1]\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/users", "host": ["{{baseUrl}}"], "path": ["api", "users"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Roles & Permissions",
+      "item": [
+        {
+          "name": "List Roles",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/roles", "host": ["{{baseUrl}}"], "path": ["api", "roles"] }
+          }
+        },
+        {
+          "name": "Create Role",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"operator\",\n  \"display_name\": \"Operator\",\n  \"description\": \"Role baru\",\n  \"permission_ids\": [1,2]\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/roles", "host": ["{{baseUrl}}"], "path": ["api", "roles"] }
+          }
+        },
+        {
+          "name": "List Permissions",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/permissions", "host": ["{{baseUrl}}"], "path": ["api", "permissions"] }
+          }
+        },
+        {
+          "name": "Create Permission",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"archive-users\",\n  \"display_name\": \"Archive Users\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/permissions", "host": ["{{baseUrl}}"], "path": ["api", "permissions"] }
+          }
+        },
+        {
+          "name": "Scenario - admin_akademik can read roles",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminAkademikToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/roles", "host": ["{{baseUrl}}"], "path": ["api", "roles"] }
+          }
+        },
+        {
+          "name": "Scenario - admin_akademik cannot create roles",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{adminAkademikToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"forbidden-role\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/roles", "host": ["{{baseUrl}}"], "path": ["api", "roles"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Service Clients",
+      "item": [
+        {
+          "name": "List Service Clients",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/service-clients", "host": ["{{baseUrl}}"], "path": ["api", "service-clients"] }
+          }
+        },
+        {
+          "name": "Create Service Client",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"SIAKAD Mobile\",\n  \"slug\": \"siakad-mobile\",\n  \"url\": \"https://mobile.example.com\",\n  \"secret\": \"super-secret\",\n  \"description\": \"Client untuk mobile app\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/service-clients", "host": ["{{baseUrl}}"], "path": ["api", "service-clients"] }
+          }
+        },
+        {
+          "name": "Get Service Client",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/service-clients/{{serviceClientId}}", "host": ["{{baseUrl}}"], "path": ["api", "service-clients", "{{serviceClientId}}"] }
+          }
+        },
+        {
+          "name": "Update Service Client",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Client mobile diperbarui\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/service-clients/{{serviceClientId}}", "host": ["{{baseUrl}}"], "path": ["api", "service-clients", "{{serviceClientId}}"] }
+          }
+        },
+        {
+          "name": "Delete Service Client",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/service-clients/{{serviceClientId}}", "host": ["{{baseUrl}}"], "path": ["api", "service-clients", "{{serviceClientId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Menu Access",
+      "item": [
+        {
+          "name": "List Menu Access",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/menu-access", "host": ["{{baseUrl}}"], "path": ["api", "menu-access"] }
+          }
+        },
+        {
+          "name": "Create Menu Access",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Dashboard\",\n  \"code\": \"dashboard\",\n  \"path\": \"/dashboard\",\n  \"icon\": \"home\",\n  \"sort_order\": 1,\n  \"is_active\": true,\n  \"description\": \"Menu dashboard utama\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/menu-access", "host": ["{{baseUrl}}"], "path": ["api", "menu-access"] }
+          }
+        },
+        {
+          "name": "Get Menu Access",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/menu-access/{{menuAccessId}}", "host": ["{{baseUrl}}"], "path": ["api", "menu-access", "{{menuAccessId}}"] }
+          }
+        },
+        {
+          "name": "Update Menu Access",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Menu dashboard diperbarui\",\n  \"is_active\": true\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/menu-access/{{menuAccessId}}", "host": ["{{baseUrl}}"], "path": ["api", "menu-access", "{{menuAccessId}}"] }
+          }
+        },
+        {
+          "name": "Delete Menu Access",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/menu-access/{{menuAccessId}}", "host": ["{{baseUrl}}"], "path": ["api", "menu-access", "{{menuAccessId}}"] }
+          }
+        },
+        {
+          "name": "Scenario - admin_akademik cannot create menu access",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{adminAkademikToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Forbidden Menu\",\n  \"code\": \"forbidden-menu\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/menu-access", "host": ["{{baseUrl}}"], "path": ["api", "menu-access"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Service Registry",
+      "item": [
+        {
+          "name": "List Service Registry",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/service-registry", "host": ["{{baseUrl}}"], "path": ["api", "service-registry"] }
+          }
+        },
+        {
+          "name": "Create Service Registry",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Academic Service\",\n  \"code\": \"academic-service\",\n  \"base_url\": \"https://api.example.com\",\n  \"health_check_url\": \"/health\",\n  \"contact_email\": \"admin@example.com\",\n  \"status\": \"active\",\n  \"description\": \"Service terdaftar\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/service-registry", "host": ["{{baseUrl}}"], "path": ["api", "service-registry"] }
+          }
+        },
+        {
+          "name": "Get Service Registry",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/service-registry/{{serviceRegistryId}}", "host": ["{{baseUrl}}"], "path": ["api", "service-registry", "{{serviceRegistryId}}"] }
+          }
+        },
+        {
+          "name": "Update Service Registry",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"maintenance\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/service-registry/{{serviceRegistryId}}", "host": ["{{baseUrl}}"], "path": ["api", "service-registry", "{{serviceRegistryId}}"] }
+          }
+        },
+        {
+          "name": "Delete Service Registry",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/service-registry/{{serviceRegistryId}}", "host": ["{{baseUrl}}"], "path": ["api", "service-registry", "{{serviceRegistryId}}"] }
+          }
+        },
+        {
+          "name": "Scenario - admin_akademik cannot create service registry",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{adminAkademikToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Forbidden Service\",\n  \"code\": \"forbidden-service\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/service-registry", "host": ["{{baseUrl}}"], "path": ["api", "service-registry"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Access Scenarios",
+      "item": [
+        {
+          "name": "Login as admin_akademik",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin.akademik@poliban.ac.id\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/login", "host": ["{{baseUrl}}"], "path": ["api", "login"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "if (body?.data?.token) {",
+                  "  pm.environment.set('adminAkademikToken', body.data.token);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login as super_admin",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@poliban.ac.id\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/login", "host": ["{{baseUrl}}"], "path": ["api", "login"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const body = pm.response.json();",
+                  "if (body?.data?.token) {",
+                  "  pm.environment.set('token', body.data.token);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "admin_akademik forbidden on service-clients",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminAkademikToken}}" }],
+            "url": { "raw": "{{baseUrl}}/api/service-clients", "host": ["{{baseUrl}}"], "path": ["api", "service-clients"] }
+          }
+        },
+        {
+          "name": "super_admin allowed on service-clients",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/service-clients", "host": ["{{baseUrl}}"], "path": ["api", "service-clients"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "API Clients",
+      "item": [
+        {
+          "name": "List API Clients",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/api-clients", "host": ["{{baseUrl}}"], "path": ["api", "api-clients"] }
+          }
+        },
+        {
+          "name": "Create API Client",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": 1,\n  \"name\": \"Integration Client\",\n  \"abilities\": [\"read\", \"write\"]\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/api-clients", "host": ["{{baseUrl}}"], "path": ["api", "api-clients"] }
+          }
+        },
+        {
+          "name": "Get API Client",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/api-clients/{{apiClientId}}", "host": ["{{baseUrl}}"], "path": ["api", "api-clients", "{{apiClientId}}"] }
+          }
+        },
+        {
+          "name": "Update API Client",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"rotate_token\": true,\n  \"abilities\": [\"read\"]\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/api-clients/{{apiClientId}}", "host": ["{{baseUrl}}"], "path": ["api", "api-clients", "{{apiClientId}}"] }
+          }
+        },
+        {
+          "name": "Delete API Client",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/api/api-clients/{{apiClientId}}", "host": ["{{baseUrl}}"], "path": ["api", "api-clients", "{{apiClientId}}"] }
+          }
+        }
+      ]
+    }
+  ]
+}
