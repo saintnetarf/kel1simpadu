@@ -42,6 +42,11 @@ php artisan serve
 /docs/api
 /docs/api.json
 ```
+6. Untuk login ke backend
+http://127.0.0.1:8000/login
+username : admin@poliban.ac.id untuk role superadmin
+username : admin.akademikpoliban.ac.id untuk role admin akademik
+password : password123
 
 Route dokumentasi ini aktif otomatis dari package `dedoc/scramble` dan default-nya tersedia untuk environment lokal.
 
